@@ -46,12 +46,20 @@ export function Navbar() {
   const count = mounted ? cart.count() : 0;
   const saved = mounted ? wishlist.ids.length : 0;
 
+  // Detail routes render a dark full-bleed hero; while pinned at the top the
+  // nav needs light text. Once scrolled, the glass bar restores normal ink.
+  const darkHero =
+    /^\/collections\/[^/]+$/.test(pathname) ||
+    /^\/journal\/[^/]+$/.test(pathname);
+  const onDark = darkHero && !scrolled;
+
   return (
     <>
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-[120] transition-all duration-700 ease-luxe",
           scrolled ? "py-3" : "py-6",
+          onDark && "text-ivory",
         )}
       >
         <div
