@@ -5,6 +5,9 @@ const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
   images: {
     formats: ["image/avif", "image/webp"],
+    // Artwork ships as local SVG canvases; allow the optimizer to serve them.
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "res.cloudinary.com" },

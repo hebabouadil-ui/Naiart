@@ -10,9 +10,13 @@ import type {
   TimelineEvent,
 } from "./types";
 
-/** Build a tuned Unsplash URL. */
-const u = (id: string, w = 1200, h = 1500) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`;
+/**
+ * Resolve an artwork image. Images ship locally as generated abstract
+ * canvases (see public/art) so the gallery never depends on flaky external
+ * hosts. Width/height are kept for call-site compatibility but unused —
+ * the SVGs are vector and scale to any frame.
+ */
+const u = (id: string, _w = 1200, _h = 1500) => `/art/${id}.svg`;
 
 export const BRAND = {
   name: "Naïa",
