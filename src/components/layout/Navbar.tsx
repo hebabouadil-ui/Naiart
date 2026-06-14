@@ -46,12 +46,19 @@ export function Navbar() {
   const count = mounted ? cart.count() : 0;
   const saved = mounted ? wishlist.ids.length : 0;
 
+  // Pages with a dark full-bleed hero need light navbar text at the very top.
+  const darkTop =
+    !scrolled &&
+    (/^\/collections\/[^/]+$/.test(pathname) ||
+      /^\/journal\/[^/]+$/.test(pathname));
+
   return (
     <>
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-[120] transition-all duration-700 ease-luxe",
           scrolled ? "py-3" : "py-6",
+          darkTop && "text-ivory",
         )}
       >
         <div
