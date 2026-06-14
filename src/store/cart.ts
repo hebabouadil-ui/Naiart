@@ -87,6 +87,6 @@ export const useCart = create<CartState>()(
         return promo ? Math.round(sub * (1 - promo.discount)) : sub;
       },
     }),
-    { name: "naiart-cart" },
+    { name: "naiart-cart", partialize: (s) => ({ items: s.items, promo: s.promo }) },
   ),
 );
