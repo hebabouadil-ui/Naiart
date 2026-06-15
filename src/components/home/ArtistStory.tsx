@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BRAND } from "@/lib/data";
 import { Reveal, TextReveal } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
+import { SafeImage } from "@/components/ui/SafeImage";
 
 const portrait =
   "https://images.unsplash.com/photo-1544717305-2782549b5136?w=900&h=1125&q=85&fit=crop&auto=format";
@@ -20,31 +20,32 @@ export function ArtistStory() {
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.15, 1]);
 
   return (
-    <section className="surface relative overflow-hidden py-24 sm:py-36">
-      <div className="container-luxe grid items-center gap-16 lg:grid-cols-2">
+    <section className="surface relative overflow-hidden py-16 sm:py-24">
+      <div className="container-luxe grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* portrait */}
-        <div ref={ref} className="relative">
+        <div ref={ref} className="relative mx-auto w-full max-w-[20rem] lg:mx-0 lg:max-w-[24rem]">
           <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
             <motion.div style={{ scale: imgScale }} className="absolute inset-0">
-              <Image
+              <SafeImage
                 src={portrait}
                 alt={BRAND.full}
                 fill
-                sizes="(max-width: 1024px) 90vw, 45vw"
+                sizes="(max-width: 1024px) 80vw, 30vw"
                 className="object-cover"
+                fallbackColor="#8B6F47"
               />
             </motion.div>
           </div>
           <motion.div
             style={{ y }}
-            className="glass-strong absolute -bottom-8 -right-4 max-w-[15rem] rounded-sm p-6 sm:-right-10"
+            className="glass-strong absolute -bottom-6 -right-3 max-w-[13rem] rounded-sm p-5 sm:-right-6"
           >
-            <p className="font-display text-4xl text-gold">15+</p>
-            <p className="mt-1 text-[0.65rem] uppercase tracking-luxe-sm muted">
+            <p className="font-display text-3xl text-gold">15+</p>
+            <p className="mt-1 text-[0.6rem] uppercase tracking-luxe-sm muted">
               Years devoted to the canvas
             </p>
           </motion.div>
-          <span className="absolute -left-3 top-6 hidden font-display text-[10rem] leading-none text-gold/10 lg:block">
+          <span className="absolute -left-2 top-4 hidden font-display text-[7rem] leading-none text-gold/10 lg:block">
             “
           </span>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -18,6 +17,7 @@ import { artworks, BRAND } from "@/lib/data";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ArtworkCard } from "@/components/ui/ArtworkCard";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { StatusPill } from "@/components/admin/StatusPill";
 
 const sampleOrders = [
@@ -67,12 +67,13 @@ function AuthScreen() {
     <div className="grid min-h-[100svh] lg:grid-cols-2">
       {/* visual panel */}
       <div className="relative hidden lg:block">
-        <Image
+        <SafeImage
           src={authPanel}
           alt="Atelier"
           fill
           sizes="50vw"
           className="object-cover"
+          fallbackColor="#8B6F47"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-deep-charcoal/90 via-deep-charcoal/30 to-transparent" />
         <div className="absolute inset-0 flex flex-col justify-end p-14 text-ivory">

@@ -17,7 +17,7 @@ export function Newsletter() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-deep-charcoal py-24 text-ivory sm:py-36">
+    <section className="relative overflow-hidden bg-deep-charcoal py-16 text-ivory sm:py-24">
       <div
         aria-hidden
         className="absolute inset-0 opacity-50"

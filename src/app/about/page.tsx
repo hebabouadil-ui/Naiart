@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { BRAND, timeline, awards, exhibitions } from "@/lib/data";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { Reveal, TextReveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
@@ -27,13 +27,14 @@ export default function AboutPage() {
       {/* Cinematic dark header */}
       <section className="relative flex min-h-[88vh] items-end overflow-hidden bg-deep-charcoal">
         <div className="grain absolute inset-0" />
-        <Image
+        <SafeImage
           src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=1600&h=900&q=85&fit=crop&auto=format"
           alt="The atelier in Arles"
           fill
           priority
           sizes="100vw"
           className="object-cover opacity-30"
+          fallbackColor="#2A2723"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-deep-charcoal via-deep-charcoal/60 to-transparent" />
         <div className="container-luxe relative z-10 pb-20 sm:pb-28">
@@ -58,12 +59,13 @@ export default function AboutPage() {
         <div className="container-luxe grid items-start gap-16 lg:grid-cols-[0.85fr_1fr]">
           <Reveal className="lg:sticky lg:top-32">
             <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
-              <Image
+              <SafeImage
                 src={portrait}
                 alt={BRAND.full}
                 fill
                 sizes="(max-width: 1024px) 90vw, 40vw"
                 className="object-cover"
+                fallbackColor="#8B6F47"
               />
             </div>
             <p className="mt-6 text-[0.65rem] uppercase tracking-luxe-sm muted">
@@ -140,12 +142,13 @@ export default function AboutPage() {
                     i === 1 ? "aspect-[3/4] sm:mt-12" : "aspect-[3/4]"
                   }`}
                 >
-                  <Image
+                  <SafeImage
                     src={src}
                     alt={`Studio detail ${i + 1}`}
                     fill
                     sizes="(max-width: 640px) 90vw, 30vw"
                     className="object-cover transition-transform duration-[1.2s] ease-luxe hover:scale-105"
+                    fallbackColor="#2A2723"
                   />
                 </div>
               </Reveal>

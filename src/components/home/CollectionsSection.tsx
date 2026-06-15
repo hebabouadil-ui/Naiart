@@ -1,15 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { collections } from "@/lib/data";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
+import { SafeImage } from "@/components/ui/SafeImage";
 
 export function CollectionsSection() {
   return (
-    <section className="container-luxe py-24 sm:py-36">
+    <section className="container-luxe py-16 sm:py-24">
       <SectionHeading
         eyebrow="Explore"
         title="Collections"
@@ -17,7 +17,7 @@ export function CollectionsSection() {
         link={{ href: "/collections", label: "All Collections" }}
       />
 
-      <div className="mt-14 grid auto-rows-[18rem] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6 lg:auto-rows-[22rem]">
+      <div className="mt-12 grid auto-rows-[16rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6 lg:auto-rows-[20rem]">
         {collections.map((c, i) => (
           <Reveal
             key={c.slug}
@@ -36,7 +36,7 @@ export function CollectionsSection() {
               data-cursor-label="Open"
               className="group relative block h-full w-full overflow-hidden rounded-sm"
             >
-              <Image
+              <SafeImage
                 src={c.cover}
                 alt={c.name}
                 fill

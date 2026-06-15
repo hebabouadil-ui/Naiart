@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Heart, Plus } from "lucide-react";
 import { motion } from "framer-motion";
@@ -8,6 +7,7 @@ import type { Artwork } from "@/lib/types";
 import { cn, formatPrice } from "@/lib/utils";
 import { useWishlist } from "@/store/wishlist";
 import { useCart } from "@/store/cart";
+import { SafeImage } from "./SafeImage";
 import { TiltCard } from "./TiltCard";
 
 const availabilityLabel: Record<Artwork["availability"], string> = {
@@ -47,13 +47,14 @@ export function ArtworkCard({
           className="block"
         >
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm surface">
-            <Image
+            <SafeImage
               src={artwork.images[0]}
               alt={artwork.title}
               fill
               priority={priority}
               sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
               className="object-cover transition-transform duration-[1.2s] ease-luxe will-change-transform group-hover:scale-[1.07]"
+              fallbackColor={artwork.dominantColor}
             />
             {/* darken on hover */}
             <div className="absolute inset-0 bg-charcoal/0 transition-colors duration-700 group-hover:bg-charcoal/15" />

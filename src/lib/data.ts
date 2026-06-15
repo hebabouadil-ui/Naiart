@@ -40,7 +40,7 @@ export const collections: Collection[] = [
     tagline: "Emotion without form",
     description:
       "Gestural fields of pigment where feeling precedes recognition — works that breathe, dissolve, and resolve before the eye.",
-    cover: u("1549887534-1541e9326642", 1400, 1750),
+    cover: u("1536924940846-227afb31e2a5", 1400, 1750),
   },
   {
     slug: "modern",
@@ -91,7 +91,7 @@ export const artworks: Artwork[] = [
     story:
       "Painted across forty mornings in the Arles studio, The Quiet Hour holds the breath between night and day. Layers of cold wax were polished and re-broken until the surface began to hold light like skin.",
     images: [
-      u("1549887534-1541e9326642"),
+      u("1541961017774-22349e4a1262"),
       u("1536924940846-227afb31e2a5"),
       u("1515405295579-ba7b45403062"),
     ],
@@ -119,7 +119,7 @@ export const artworks: Artwork[] = [
       "Near-white impasto carved with palette knife, a study of texture in absence of colour.",
     story:
       "Ground marble dust gives this work its tactile, architectural surface. From a distance it reads as pure ivory; up close, a topography of ridges catches every shift of light.",
-    images: [u("1536924940846-227afb31e2a5"), u("1549887534-1541e9326642")],
+    images: [u("1536924940846-227afb31e2a5"), u("1541961017774-22349e4a1262")],
     dominantColor: "#E7DECF",
     colorName: "Ivory",
     availability: "available",
@@ -192,7 +192,7 @@ export const artworks: Artwork[] = [
     description: "Concentric washes that recede like the pull of the sea.",
     story:
       "Built from dozens of thin pours, each allowed to dry before the next, Tidal Memory is a record of patience — a tide line of the artist's own time.",
-    images: [u("1515405295579-ba7b45403062"), u("1549887534-1541e9326642")],
+    images: [u("1515405295579-ba7b45403062"), u("1541961017774-22349e4a1262")],
     dominantColor: "#2A2723",
     colorName: "Graphite",
     availability: "available",

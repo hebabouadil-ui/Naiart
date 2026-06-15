@@ -7,7 +7,7 @@ import { ArtworkCard } from "@/components/ui/ArtworkCard";
 
 export function FeaturedArtwork() {
   return (
-    <section className="container-luxe py-24 sm:py-36" id="featured">
+    <section className="container-luxe py-16 sm:py-24" id="featured">
       <div className="flex items-end justify-between gap-6 border-b border-current/10 pb-10">
         <div>
           <span className="text-[0.6rem] uppercase tracking-luxe text-clay">
@@ -26,7 +26,7 @@ export function FeaturedArtwork() {
         </Link>
       </div>
 
-      <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
         {featuredArtworks.slice(0, 3).map((aw, i) => (
           <ArtworkCard key={aw.id} artwork={aw} index={i} priority={i < 3} />
         ))}
