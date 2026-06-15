@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Collections",
   description:
-    "Explore the collections of Naïa Lemaire — abstract, modern, landscape, portrait, and bespoke commissioned works from the Arles atelier.",
+    "Explore the collections of Rabia Nainia — abstract, modern, landscape, portrait, and bespoke commissioned works from the Arles atelier.",
 };
 
 export default function CollectionsPage() {

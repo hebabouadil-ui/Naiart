@@ -280,7 +280,7 @@ export default function ContactPage() {
             {/* Map */}
             <div className="relative aspect-[16/10] overflow-hidden rounded-sm border border-current/10">
               <iframe
-                title="Atelier Naïa, Arles, France"
+                title="Atelier Naiart, Arles, France"
                 src="https://www.google.com/maps?q=Arles,France&output=embed"
                 className="h-full w-full grayscale transition-all duration-700 hover:grayscale-0"
                 loading="lazy"

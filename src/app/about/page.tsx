@@ -9,7 +9,7 @@ import { Timeline } from "@/components/about/Timeline";
 export const metadata: Metadata = {
   title: "The Artist",
   description:
-    "The life and practice of Naïa Lemaire — a French painter from the Camargue working in oil and cold wax from her atelier in Arles, Provence.",
+    "The life and practice of Rabia Nainia — a French painter from the Camargue working in oil and cold wax from her atelier in Arles, Provence.",
 };
 
 const portrait =
@@ -67,7 +67,7 @@ export default function AboutPage() {
               />
             </div>
             <p className="mt-6 text-[0.65rem] uppercase tracking-luxe-sm muted">
-              {BRAND.full} — Atelier Naïa, Arles
+              {BRAND.full} — Atelier Rabia, Arles
             </p>
           </Reveal>
 

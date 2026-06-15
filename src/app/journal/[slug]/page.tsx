@@ -25,7 +25,7 @@ export async function generateMetadata({
     description: post.excerpt,
     authors: [{ name: post.author }],
     openGraph: {
-      title: `${post.title} — Naïart Journal`,
+      title: `${post.title} — Naiart Journal`,
       description: post.excerpt,
       type: "article",
       publishedTime: post.publishedAt,

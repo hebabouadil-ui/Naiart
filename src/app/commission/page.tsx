@@ -21,7 +21,7 @@ const steps = [
     index: "02",
     title: "Concept",
     description:
-      "Naïa develops charcoal studies and a colour direction. Together we refine the composition until it feels inevitable.",
+      "Rabia develops charcoal studies and a colour direction. Together we refine the composition until it feels inevitable.",
   },
   {
     icon: Brush,
@@ -118,7 +118,7 @@ export default function CommissionPage() {
           />
           <Reveal delay={0.2}>
             <p className="mt-8 max-w-xl font-serif text-xl leading-relaxed muted">
-              Thank you, {form.name || "friend"}. Naïa has been notified and will
+              Thank you, {form.name || "friend"}. Rabia has been notified and will
               respond personally — usually within two working days — to begin
               shaping your commission.
             </p>

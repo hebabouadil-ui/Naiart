@@ -20,14 +20,15 @@ export const metadata: Metadata = {
     template: `%s · ${BRAND.signature}`,
   },
   description:
-    "The official online gallery of contemporary painter Naïa Lemaire. Discover, explore, and acquire original paintings — abstract, modern, landscape, and portrait works from the Arles atelier.",
+    "The official online gallery of contemporary painter Rabia Nainia. Discover, explore, and acquire original paintings — abstract, modern, landscape, and portrait works from the Arles atelier.",
   keywords: [
     "original paintings",
     "contemporary art",
     "buy art online",
     "luxury art gallery",
     "abstract paintings",
-    "Naïa Lemaire",
+    "Rabia Nainia",
+    "Naiart",
     "art commission",
   ],
   authors: [{ name: BRAND.full }],
@@ -39,13 +40,13 @@ export const metadata: Metadata = {
     siteName: BRAND.signature,
     title: `${BRAND.full} — ${BRAND.tagline}`,
     description:
-      "Original paintings from the Arles atelier of Naïa Lemaire. A luxury online gallery.",
+      "Original paintings from the Arles atelier of Rabia Nainia. A luxury online gallery.",
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: BRAND.full }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${BRAND.full} — ${BRAND.tagline}`,
-    description: "Original paintings from the Arles atelier of Naïa Lemaire.",
+    description: "Original paintings from the Arles atelier of Rabia Nainia.",
   },
   robots: { index: true, follow: true },
   alternates: { canonical: siteUrl },

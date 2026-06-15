@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: `${BRAND.full} — ${BRAND.signature}`,
     short_name: BRAND.signature,
     description:
-      "The official online gallery of contemporary painter Naïa Lemaire.",
+      "The official online gallery of contemporary painter Rabia Nainia.",
     start_url: "/",
     display: "standalone",
     background_color: "#0E0D0B",

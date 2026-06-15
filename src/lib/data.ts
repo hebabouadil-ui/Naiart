@@ -375,7 +375,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "t1",
     quote:
-      "Naïa's work transformed our home into something sacred. People fall silent when they enter the room — the painting holds the light all day.",
+      "Rabia's work transformed our home into something sacred. People fall silent when they enter the room — the painting holds the light all day.",
     author: "Isabelle Moreau",
     role: "Private Collector",
     location: "Paris, France",
@@ -393,7 +393,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "t3",
     quote:
-      "Buying from the Naïart studio felt like joining a story rather than making a purchase. The certificate, the packaging, the care — flawless.",
+      "Buying from the Naiart studio felt like joining a story rather than making a purchase. The certificate, the packaging, the care — flawless.",
     author: "Mariko Tanaka",
     role: "Architect & Collector",
     location: "Tokyo, Japan",
@@ -402,7 +402,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "t4",
     quote:
-      "Three works later, I am still discovering new things in each one. Naïa paints time itself.",
+      "Three works later, I am still discovering new things in each one. Rabia paints time itself.",
     author: "Daniel Rossi",
     role: "Interior Designer",
     location: "Milan, Italy",
@@ -416,7 +416,7 @@ export const processSteps: ProcessStep[] = [
     title: "Inspiration",
     subtitle: "Seeing",
     description:
-      "Every work begins in the landscape of Provence — the quality of light at a precise hour, a colour in the salt marsh, a feeling that refuses words. Naïa keeps painted notebooks of these encounters.",
+      "Every work begins in the landscape of Provence — the quality of light at a precise hour, a colour in the salt marsh, a feeling that refuses words. Rabia keeps painted notebooks of these encounters.",
     image: u("1490750967868-88aa4486c946", 1000, 1300),
   },
   {
@@ -482,7 +482,7 @@ export const timeline: TimelineEvent[] = [
   },
   {
     year: "2025",
-    title: "Naïart online",
+    title: "Naiart online",
     description:
       "Opens her studio directly to collectors worldwide through a dedicated digital gallery.",
   },
@@ -512,7 +512,7 @@ export const journal: JournalPost[] = [
       "Why I abandoned smooth surfaces for the slow, sculptural language of wax and pigment.",
     category: "Journal",
     cover: u("1579783902614-a3fb3927b6a5", 1400, 1000),
-    author: "Naïa Lemaire",
+    author: "Rabia Nainia",
     readTime: 6,
     publishedAt: "2025-02-14",
     content: [
@@ -530,7 +530,7 @@ export const journal: JournalPost[] = [
       "A field guide to the impossible task of capturing southern light on linen.",
     category: "Tutorial",
     cover: u("1490750967868-88aa4486c946", 1400, 1000),
-    author: "Naïa Lemaire",
+    author: "Rabia Nainia",
     readTime: 8,
     publishedAt: "2025-01-20",
     content: [
@@ -545,10 +545,10 @@ export const journal: JournalPost[] = [
     slug: "inside-the-arles-atelier",
     title: "Inside the Arles Atelier",
     excerpt:
-      "A morning in the converted printworks where every Naïart canvas is born.",
+      "A morning in the converted printworks where every Naiart canvas is born.",
     category: "Behind the Scenes",
     cover: u("1513519245088-0e12902e35ca", 1400, 1000),
-    author: "Studio Naïart",
+    author: "Studio Naiart",
     readTime: 5,
     publishedAt: "2024-12-08",
     content: [
@@ -566,7 +566,7 @@ export const journal: JournalPost[] = [
       "How a broken bowl in Kyoto reshaped an entire year of painting.",
     category: "Journal",
     cover: u("1502691876148-a84978e59af8", 1400, 1000),
-    author: "Naïa Lemaire",
+    author: "Rabia Nainia",
     readTime: 7,
     publishedAt: "2024-11-02",
     content: [

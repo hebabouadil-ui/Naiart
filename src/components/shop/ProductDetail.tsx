@@ -284,7 +284,7 @@ export function ProductDetail({
     image: artwork.images,
     description: artwork.description,
     category: collection?.name ?? artwork.collection,
-    brand: { "@type": "Brand", name: "Naïart" },
+    brand: { "@type": "Brand", name: "Naiart" },
     offers: {
       "@type": "Offer",
       price: artwork.price,

@@ -80,7 +80,7 @@ export default function SettingsAdmin() {
             <FieldGroup label="Artist Biography">
               <Textarea
                 className="min-h-[160px]"
-                defaultValue="Naïa Lemaire grew up between the salt marshes of the Camargue and the print studios of Marseille. From her atelier in Arles, she works in oil and cold wax, building and breaking surfaces until a painting holds light the way memory holds a moment."
+                defaultValue="Rabia Nainia grew up between the salt marshes of the Camargue and the print studios of Marseille. From her atelier in Arles, she works in oil and cold wax, building and breaking surfaces until a painting holds light the way memory holds a moment."
               />
             </FieldGroup>
             <div>
@@ -123,7 +123,7 @@ export default function SettingsAdmin() {
               <Input defaultValue={`${BRAND.full} — ${BRAND.tagline}`} />
             </FieldGroup>
             <FieldGroup label="Meta Description">
-              <Textarea defaultValue="The official online gallery of contemporary painter Naïa Lemaire. Discover and acquire original paintings from the Arles atelier." />
+              <Textarea defaultValue="The official online gallery of contemporary painter Rabia Nainia. Discover and acquire original paintings from the Arles atelier." />
             </FieldGroup>
             <FieldGroup label="Keywords">
               <Input defaultValue="original paintings, contemporary art, buy art online, luxury art gallery" />

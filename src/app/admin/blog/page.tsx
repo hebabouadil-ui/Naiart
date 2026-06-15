@@ -78,7 +78,7 @@ export default function BlogAdmin() {
           excerpt: form.excerpt,
           category: form.category,
           cover: seed[0].cover,
-          author: "Naïa Lemaire",
+          author: "Rabia Nainia",
           readTime: Math.max(2, Math.round(content.join(" ").length / 900)),
           publishedAt: new Date().toISOString().slice(0, 10),
           content,

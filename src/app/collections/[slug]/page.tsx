@@ -29,7 +29,7 @@ export async function generateMetadata({
     title: collection.name,
     description: collection.description,
     openGraph: {
-      title: `${collection.name} — Naïart`,
+      title: `${collection.name} — Naiart`,
       description: collection.description,
       type: "website",
       images: [{ url: collection.cover, alt: collection.name }],

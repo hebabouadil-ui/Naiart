@@ -9,7 +9,7 @@ import { formatDate } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Journal",
   description:
-    "Notes from the atelier — essays on process, materials, light, and the slow craft of painting by Naïa Lemaire.",
+    "Notes from the atelier — essays on process, materials, light, and the slow craft of painting by Rabia Nainia.",
 };
 
 export default function JournalPage() {

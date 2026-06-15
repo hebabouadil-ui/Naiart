@@ -28,7 +28,7 @@ export const useAuth = create<AuthState>()(
       login: (email, password) => {
         const e = email.trim().toLowerCase();
         if (e === "admin@naiart.com" && password === "atelier") {
-          set({ user: { name: "Naïa Lemaire", email: e, role: "admin" } });
+          set({ user: { name: "Rabia Nainia", email: e, role: "admin" } });
           return { ok: true };
         }
         if (e && password.length >= 4) {
