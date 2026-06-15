@@ -133,45 +133,91 @@ function build(id, paletteName) {
     )}" fill="${c}" opacity="${rnd(0.14, 0.32).toFixed(2)}" filter="url(#soft)"/>`;
   }
 
-  // -- sweeping brush gestures: long curved strokes with tapered width --
-  function stroke(color, baseW, op) {
-    const x0 = rnd(-0.1, 0.3) * W;
-    const y0 = rnd(0.05, 0.95) * H;
-    const x1 = rnd(0.7, 1.1) * W;
-    const y1 = y0 + rnd(-0.18, 0.18) * H;
-    // gentle arc: control points stay near the baseline (no loops)
+  // -- sweeping brush gestures with impasto depth --
+  // each stroke is drawn as shadow + body + highlight for a 3D paint feel.
+  function shade(hex, amt) {
+    const n = parseInt(hex.slice(1), 16);
+    let R = (n >> 16) & 255,
+      G = (n >> 8) & 255,
+      B = n & 255;
+    R = Math.max(0, Math.min(255, Math.round(R + amt)));
+    G = Math.max(0, Math.min(255, Math.round(G + amt)));
+    B = Math.max(0, Math.min(255, Math.round(B + amt)));
+    return "#" + ((1 << 24) + (R << 16) + (G << 8) + B).toString(16).slice(1);
+  }
+  function brushPath(x0, y0) {
+    const sy = y0;
+    const x1 = rnd(0.7, 1.15) * W;
+    const y1 = sy + rnd(-0.16, 0.16) * H;
     const cx1 = rnd(0.25, 0.45) * W;
-    const cy1 = y0 + rnd(-0.12, 0.12) * H;
-    const cx2 = rnd(0.55, 0.75) * W;
-    const cy2 = y1 + rnd(-0.12, 0.12) * H;
-    return `<path d="M ${x0.toFixed(0)} ${y0.toFixed(0)} C ${cx1.toFixed(
+    const cy1 = sy + rnd(-0.1, 0.1) * H;
+    const cx2 = rnd(0.55, 0.78) * W;
+    const cy2 = y1 + rnd(-0.1, 0.1) * H;
+    return `M ${x0.toFixed(0)} ${sy.toFixed(0)} C ${cx1.toFixed(0)} ${cy1.toFixed(
       0,
-    )} ${cy1.toFixed(0)}, ${cx2.toFixed(0)} ${cy2.toFixed(0)}, ${x1.toFixed(
+    )}, ${cx2.toFixed(0)} ${cy2.toFixed(0)}, ${x1.toFixed(0)} ${y1.toFixed(0)}`;
+  }
+  function impasto(color, baseW, op, x0, y0) {
+    const d = brushPath(x0, y0);
+    const body = `<path d="${d}" stroke="${color}" stroke-width="${baseW.toFixed(
       0,
-    )} ${y1.toFixed(0)}" stroke="${color}" stroke-width="${baseW.toFixed(
+    )}" stroke-linecap="round" fill="none" opacity="${op.toFixed(
+      2,
+    )}" filter="url(#rough)"/>`;
+    // shadow just below, highlight just above — offset by a few px
+    const sh = `<path d="${d}" stroke="${shade(color, -34)}" stroke-width="${(
+      baseW * 0.5
+    ).toFixed(0)}" stroke-linecap="round" fill="none" opacity="${(op * 0.6).toFixed(
+      2,
+    )}" transform="translate(0 ${(baseW * 0.32).toFixed(
+      1,
+    )})" filter="url(#rough)"/>`;
+    const hi = `<path d="${d}" stroke="${shade(color, 46)}" stroke-width="${(
+      baseW * 0.34
+    ).toFixed(0)}" stroke-linecap="round" fill="none" opacity="${(op * 0.7).toFixed(
+      2,
+    )}" transform="translate(0 ${(-baseW * 0.3).toFixed(
+      1,
+    )})" filter="url(#rough)"/>`;
+    return sh + body + hi;
+  }
+  // single thin stroke (for gold leaf / fine marks)
+  function stroke(color, baseW, op, x0, y0) {
+    const d = brushPath(
+      x0 ?? rnd(-0.1, 0.3) * W,
+      y0 ?? rnd(0.05, 0.95) * H,
+    );
+    return `<path d="${d}" stroke="${color}" stroke-width="${baseW.toFixed(
       0,
     )}" stroke-linecap="round" fill="none" opacity="${op.toFixed(
       2,
     )}" filter="url(#rough)"/>`;
   }
+
   let gestures = "";
-  const nG = 4 + Math.floor(r() * 3);
+  // stack many overlapping strokes across the canvas for a worked surface
+  const nG = 9 + Math.floor(r() * 5);
   for (let i = 0; i < nG; i++) {
-    gestures += stroke(pick(fields), rnd(14, 46), rnd(0.4, 0.75));
+    const x0 = rnd(-0.15, 0.35) * W;
+    const y0 = (i / nG) * H + rnd(-0.06, 0.06) * H;
+    gestures += impasto(pick(fields), rnd(20, 60), rnd(0.45, 0.8), x0, y0);
   }
-  // a couple of bright highlight strokes
-  for (let i = 0; i < 2; i++) {
-    gestures += stroke(p.light, rnd(6, 16), rnd(0.35, 0.6));
+  // a few luminous highlight sweeps
+  for (let i = 0; i < 3; i++) {
+    gestures += impasto(
+      p.light,
+      rnd(8, 20),
+      rnd(0.35, 0.6),
+      rnd(-0.1, 0.3) * W,
+      rnd(0.1, 0.9) * H,
+    );
   }
 
   // -- gold leaf: one defining horizon gesture + drifting flecks --
   let gold = "";
   const gy = rnd(0.35, 0.7) * H;
-  gold += stroke(p.gold, rnd(4, 9), 0.8).replace(
-    /M [\d.]+ [\d.-]+/,
-    `M ${(-0.05 * W).toFixed(0)} ${gy.toFixed(0)}`,
-  );
-  const nFleck = 14 + Math.floor(r() * 12);
+  gold += stroke(p.gold, rnd(5, 10), 0.85, -0.05 * W, gy);
+  const nFleck = 16 + Math.floor(r() * 14);
   for (let i = 0; i < nFleck; i++) {
     const cx = rnd(0, 1) * W;
     const cy = rnd(0, 1) * H;

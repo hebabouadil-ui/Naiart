@@ -10,8 +10,11 @@ import type {
   TimelineEvent,
 } from "./types";
 
-/** Local artwork asset (bundled in /public/art) so images always load. */
-const u = (id: string, _w = 1200, _h = 1500) => `/art/${id}.svg`;
+/** Local artwork asset (bundled in /public/art) so images always load.
+ *  The ?v suffix busts the browser/CDN cache whenever the art is regenerated. */
+const ART_VERSION = "3";
+const u = (id: string, _w = 1200, _h = 1500) =>
+  `/art/${id}.svg?v=${ART_VERSION}`;
 
 export const BRAND = {
   name: "Naiart",

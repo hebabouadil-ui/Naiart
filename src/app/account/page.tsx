@@ -38,7 +38,7 @@ const sampleOrders = [
 ];
 
 const authPanel =
-  "/art/1578321272176-b7bbc0679853.svg";
+  "/art/1578321272176-b7bbc0679853.svg?v=3";
 
 function AuthScreen() {
   const { login, register } = useAuth();
