@@ -10,11 +10,11 @@ import type {
   TimelineEvent,
 } from "./types";
 
-/** Local artwork asset (bundled in /public/art) so images always load.
- *  The ?v suffix busts the browser/CDN cache whenever the art is regenerated. */
-const ART_VERSION = "3";
-const u = (id: string, _w = 1200, _h = 1500) =>
-  `/art/${id}.svg?v=${ART_VERSION}`;
+/** Unsplash demo images — real photography so the site looks production-ready.
+ *  IDs are Unsplash photo IDs; swap the base URL to Cloudinary once credentials
+ *  are set (cloud name goes in NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME). */
+const u = (id: string, w = 1200, h = 1500) =>
+  `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&q=85&fit=crop&auto=format`;
 
 export const BRAND = {
   name: "Naiart",
