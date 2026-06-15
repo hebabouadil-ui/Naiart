@@ -1,51 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250" width="1000" height="1250" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <radialGradient id="b0" cx="59.0%" cy="35.2%" r="80%">
-      <stop offset="0%" stop-color="#e8efc6" stop-opacity="0.60"/>
-      <stop offset="100%" stop-color="#e8efc6" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="b1" cx="71.1%" cy="25.9%" r="75%">
-      <stop offset="0%" stop-color="#5c7038" stop-opacity="0.83"/>
-      <stop offset="100%" stop-color="#5c7038" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="b2" cx="71.4%" cy="46.6%" r="75%">
-      <stop offset="0%" stop-color="#9bb060" stop-opacity="0.86"/>
-      <stop offset="100%" stop-color="#9bb060" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="b3" cx="87.9%" cy="64.2%" r="75%">
-      <stop offset="0%" stop-color="#3f4a2c" stop-opacity="0.84"/>
-      <stop offset="100%" stop-color="#3f4a2c" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="b4" cx="78.8%" cy="56.6%" r="75%">
-      <stop offset="0%" stop-color="#5c7038" stop-opacity="0.99"/>
-      <stop offset="100%" stop-color="#5c7038" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="topLight" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#e8efc6" stop-opacity="0.14"/>
-      <stop offset="45%" stop-color="#e8efc6" stop-opacity="0"/>
+    <linearGradient id="ground" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0%" stop-color="#d9ccb0"/>
+      <stop offset="100%" stop-color="#cabd9f"/>
     </linearGradient>
-    <radialGradient id="vignette" cx="50%" cy="40%" r="80%">
-      <stop offset="55%" stop-color="#000000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000000" stop-opacity="0.32"/>
-    </radialGradient>
-    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
-      <feColorMatrix type="saturate" values="0"/>
-      <feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer>
-      <feComposite operator="over" in2="SourceGraphic"/>
+    <filter id="soft"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="rough" x="-25%" y="-25%" width="150%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.03" numOctaves="3" seed="15.16" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
-    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="34"/></filter>
-    <filter id="softer" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="canvas">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0"/>
+    </filter>
+    <radialGradient id="vig" cx="50%" cy="40%" r="78%">
+      <stop offset="52%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.38"/>
+    </radialGradient>
+    <linearGradient id="topGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f1e8d4" stop-opacity="0.14"/>
+      <stop offset="42%" stop-color="#f1e8d4" stop-opacity="0"/>
+    </linearGradient>
   </defs>
-  <rect width="800" height="1000" fill="#2a331f"/>
-  <g filter="url(#soft)">
-    <rect width="800" height="1000" fill="url(#b0)"/>
-    <rect width="800" height="1000" fill="url(#b1)"/>
-    <rect width="800" height="1000" fill="url(#b2)"/>
-    <rect width="800" height="1000" fill="url(#b3)"/>
-    <rect width="800" height="1000" fill="url(#b4)"/>
-  </g>
-  <path d="M -40 762 C 240 569, 560 767, 840 574" fill="none" stroke="#e8efc6" stroke-opacity="0.16" stroke-width="23" stroke-linecap="round" filter="url(#softer)"/>
-  <rect width="800" height="1000" fill="url(#topLight)"/>
-  <rect width="800" height="1000" fill="url(#vignette)"/>
-  <rect width="800" height="1000" fill="#808080" filter="url(#grain)" opacity="0.5" style="mix-blend-mode:overlay"/>
+
+  <rect width="1000" height="1250" fill="url(#ground)"/>
+  <g><rect x="-40" y="-30" width="1080" height="691" fill="#e0d4ba" opacity="0.65" filter="url(#soft)"/><rect x="-40" y="601" width="1080" height="336" fill="#a8916b" opacity="0.75" filter="url(#soft)"/><rect x="-40" y="877" width="1080" height="403" fill="#9c855f" opacity="0.68" filter="url(#soft)"/></g>
+  <g><circle cx="730" cy="691" r="543" fill="#9c855f" opacity="0.31" filter="url(#soft)"/><circle cx="153" cy="192" r="489" fill="#f1e8d4" opacity="0.18" filter="url(#soft)"/><circle cx="791" cy="166" r="450" fill="#f1e8d4" opacity="0.23" filter="url(#soft)"/></g>
+  <g><path d="M -96 80 C 448 13, 714 145, 944 269" stroke="#bca884" stroke-width="23" stroke-linecap="round" fill="none" opacity="0.62" filter="url(#rough)"/><path d="M 293 208 C 259 69, 614 28, 947 75" stroke="#a8916b" stroke-width="23" stroke-linecap="round" fill="none" opacity="0.52" filter="url(#rough)"/><path d="M 11 755 C 364 785, 681 665, 1081 792" stroke="#a8916b" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.41" filter="url(#rough)"/><path d="M -51 573 C 251 570, 572 846, 882 790" stroke="#a8916b" stroke-width="21" stroke-linecap="round" fill="none" opacity="0.50" filter="url(#rough)"/><path d="M -29 650 C 428 550, 664 718, 1049 795" stroke="#f1e8d4" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.40" filter="url(#rough)"/><path d="M 207 97 C 327 98, 729 -93, 734 -54" stroke="#f1e8d4" stroke-width="11" stroke-linecap="round" fill="none" opacity="0.60" filter="url(#rough)"/></g>
+  <path d="M -50 640 C 439 193, 610 -49, 807 -74" stroke="#c8a86c" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.80" filter="url(#rough)"/><circle cx="267" cy="491" r="6.8" fill="#c8a86c" opacity="0.53"/><circle cx="12" cy="994" r="6.1" fill="#c8a86c" opacity="0.66"/><circle cx="418" cy="1096" r="5.3" fill="#c8a86c" opacity="0.69"/><circle cx="876" cy="449" r="6.6" fill="#c8a86c" opacity="0.49"/><circle cx="354" cy="189" r="3.3" fill="#c8a86c" opacity="0.71"/><circle cx="466" cy="983" r="6.5" fill="#c8a86c" opacity="0.43"/><circle cx="688" cy="158" r="3.6" fill="#c8a86c" opacity="0.54"/><circle cx="147" cy="1044" r="2.8" fill="#c8a86c" opacity="0.43"/><circle cx="940" cy="1017" r="3.8" fill="#c8a86c" opacity="0.34"/><circle cx="986" cy="1065" r="5.9" fill="#c8a86c" opacity="0.37"/><circle cx="436" cy="438" r="2.1" fill="#c8a86c" opacity="0.43"/><circle cx="527" cy="1234" r="6.1" fill="#c8a86c" opacity="0.33"/><circle cx="370" cy="459" r="2.3" fill="#c8a86c" opacity="0.50"/><circle cx="583" cy="1179" r="4.2" fill="#c8a86c" opacity="0.64"/>
+  <rect width="1000" height="1250" fill="url(#topGlow)"/>
+  <rect width="1000" height="1250" filter="url(#canvas)"/>
+  <rect width="1000" height="1250" fill="url(#vig)"/>
 </svg>
