@@ -135,6 +135,17 @@
     }
   }
 
+  /* Ambient gold-dust drift (CSS particle field) */
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(6px, -16px, 0);
+    }
+  }
+
   /* Link underline reveal */
   .link-underline {
     position: relative;
