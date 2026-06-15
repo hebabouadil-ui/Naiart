@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { ArrowUpRight } from "lucide-react";
 import { collections, getArtworksByCollection } from "@/lib/data";
 import { Reveal, TextReveal } from "@/components/ui/Reveal";
@@ -58,12 +58,13 @@ export default function CollectionsPage() {
                       flipped && "lg:order-2",
                     )}
                   >
-                    <Image
+                    <SafeImage
                       src={collection.cover}
                       alt={collection.name}
                       fill
                       sizes="(max-width: 1024px) 90vw, 45vw"
                       className="object-cover transition-transform duration-[1.4s] ease-luxe will-change-transform group-hover:scale-[1.06]"
+                      fallbackColor="#2A2723"
                     />
                     <div className="absolute inset-0 bg-charcoal/0 transition-colors duration-700 group-hover:bg-charcoal/10" />
                     <span className="absolute left-6 top-6 font-display text-[clamp(3rem,6vw,5rem)] leading-none text-ivory/90 mix-blend-difference">

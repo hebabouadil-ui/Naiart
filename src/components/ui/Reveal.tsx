@@ -91,23 +91,22 @@ export function TextReveal({
 }) {
   const words = text.split(" ");
   return (
-    <Tag className={cn("flex flex-wrap", className)}>
+    <Tag className={cn("flex flex-wrap gap-x-[0.25em]", className)}>
       {words.map((word, i) => (
-        <span key={i} className="mr-[0.25em] inline-block overflow-hidden py-[0.04em]">
-          <motion.span
-            className="inline-block"
-            initial={{ y: "110%" }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true, amount: 0 }}
-            transition={{
-              duration: 0.95,
-              ease: easing,
-              delay: delay + i * 0.055,
-            }}
-          >
-            {word}
-          </motion.span>
-        </span>
+        <motion.span
+          key={i}
+          className="inline-block"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0 }}
+          transition={{
+            duration: 0.95,
+            ease: easing,
+            delay: delay + i * 0.055,
+          }}
+        >
+          {word}
+        </motion.span>
       ))}
     </Tag>
   );

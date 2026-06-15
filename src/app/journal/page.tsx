@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { ArrowUpRight } from "lucide-react";
 import { journal } from "@/lib/data";
 import { Reveal, TextReveal, StaggerGroup, StaggerItem } from "@/components/ui/Reveal";
@@ -71,13 +71,14 @@ export default function JournalPage() {
               className="group grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
             >
               <div className="relative aspect-[5/4] overflow-hidden rounded-sm surface">
-                <Image
+                <SafeImage
                   src={featured.cover}
                   alt={featured.title}
                   fill
                   priority
                   sizes="(max-width: 1024px) 90vw, 50vw"
                   className="object-cover transition-transform duration-[1.4s] ease-luxe will-change-transform group-hover:scale-[1.05]"
+                  fallbackColor="#2A2723"
                 />
                 <span className="absolute left-5 top-5 rounded-full bg-gold-gradient px-4 py-1.5 text-[0.55rem] uppercase tracking-luxe-sm text-charcoal">
                   Latest
@@ -125,12 +126,13 @@ export default function JournalPage() {
                     data-cursor-label="Read"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden rounded-sm surface">
-                      <Image
+                      <SafeImage
                         src={post.cover}
                         alt={post.title}
                         fill
                         sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
                         className="object-cover transition-transform duration-[1.2s] ease-luxe will-change-transform group-hover:scale-[1.07]"
+                        fallbackColor="#2A2723"
                       />
                       <span className="glass-strong absolute left-4 top-4 rounded-full px-3 py-1 text-[0.55rem] uppercase tracking-luxe-sm text-charcoal">
                         {post.category}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
@@ -75,12 +75,13 @@ export function CartDrawer() {
                         onClick={cart.close}
                         className="relative h-28 w-24 shrink-0 overflow-hidden rounded-sm surface"
                       >
-                        <Image
+                        <SafeImage
                           src={item.image}
                           alt={item.title}
                           fill
                           sizes="96px"
                           className="object-cover"
+                          fallbackColor="#2A2723"
                         />
                       </Link>
                       <div className="flex flex-1 flex-col justify-between">

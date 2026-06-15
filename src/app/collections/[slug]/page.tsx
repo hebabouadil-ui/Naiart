@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
@@ -52,13 +52,14 @@ export default async function CollectionPage({
     <main className="min-h-screen pb-32">
       {/* Dark full-bleed hero */}
       <section className="relative flex min-h-[88vh] items-end overflow-hidden bg-deep-charcoal">
-        <Image
+        <SafeImage
           src={collection.cover}
           alt={collection.name}
           fill
           priority
           sizes="100vw"
           className="object-cover opacity-70"
+          fallbackColor="#2A2723"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-deep-charcoal via-deep-charcoal/40 to-deep-charcoal/30" />
         <div className="grain absolute inset-0" />

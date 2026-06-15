@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
@@ -50,13 +50,14 @@ export default async function JournalPostPage({
     <main className="min-h-screen pb-32">
       {/* Hero cover */}
       <section className="relative flex min-h-[80vh] items-end overflow-hidden bg-deep-charcoal">
-        <Image
+        <SafeImage
           src={post.cover}
           alt={post.title}
           fill
           priority
           sizes="100vw"
           className="object-cover opacity-65"
+          fallbackColor="#2A2723"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-deep-charcoal via-deep-charcoal/40 to-deep-charcoal/20" />
         <div className="grain absolute inset-0" />
@@ -154,12 +155,13 @@ export default async function JournalPostPage({
                   data-cursor-label="Read"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden rounded-sm surface">
-                    <Image
+                    <SafeImage
                       src={p.cover}
                       alt={p.title}
                       fill
                       sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
                       className="object-cover transition-transform duration-[1.2s] ease-luxe will-change-transform group-hover:scale-[1.07]"
+                      fallbackColor="#2A2723"
                     />
                   </div>
                   <span className="mt-5 block text-[0.62rem] uppercase tracking-luxe-sm text-gold">
