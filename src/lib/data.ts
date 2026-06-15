@@ -10,19 +10,18 @@ import type {
   TimelineEvent,
 } from "./types";
 
-/** Build a tuned Unsplash URL. */
-const u = (id: string, w = 1200, h = 1500) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`;
+/** Local artwork asset (bundled in /public/art) so images always load. */
+const u = (id: string, _w = 1200, _h = 1500) => `/art/${id}.svg`;
 
 export const BRAND = {
-  name: "Naïa",
-  full: "Naïa Lemaire",
-  signature: "Naïart",
+  name: "Naiart",
+  full: "Rabia Nainia",
+  signature: "Naiart",
   tagline: "Where Emotion Meets Canvas",
-  role: "Contemporary Painter · Studio Arles",
+  role: "Contemporary Painter & Artist",
   email: "studio@naiart.com",
   phone: "+33 4 90 00 00 00",
-  address: "Atelier Naïa — 14 Rue des Arts, Arles, Provence, France",
+  address: "Naiart Atelier — Studio visits by appointment",
   social: {
     instagram: "https://instagram.com",
     pinterest: "https://pinterest.com",

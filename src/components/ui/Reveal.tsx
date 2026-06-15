@@ -98,7 +98,7 @@ export function TextReveal({
             className="inline-block"
             initial={{ y: "110%" }}
             whileInView={{ y: 0 }}
-            viewport={{ once: true, margin: "-8% 0px" }}
+            viewport={{ once: true, amount: 0 }}
             transition={{
               duration: 0.95,
               ease: easing,

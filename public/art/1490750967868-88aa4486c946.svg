@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="b0" cx="49.6%" cy="22.2%" r="80%">
+      <stop offset="0%" stop-color="#e3d8f6" stop-opacity="0.61"/>
+      <stop offset="100%" stop-color="#e3d8f6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b1" cx="12.8%" cy="5.3%" r="75%">
+      <stop offset="0%" stop-color="#6a5a8e" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#6a5a8e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b2" cx="47.8%" cy="24.7%" r="75%">
+      <stop offset="0%" stop-color="#9d8cc0" stop-opacity="0.70"/>
+      <stop offset="100%" stop-color="#9d8cc0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b3" cx="62.1%" cy="68.5%" r="75%">
+      <stop offset="0%" stop-color="#46395c" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#46395c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b4" cx="8.9%" cy="64.1%" r="75%">
+      <stop offset="0%" stop-color="#6a5a8e" stop-opacity="0.91"/>
+      <stop offset="100%" stop-color="#6a5a8e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="topLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e3d8f6" stop-opacity="0.14"/>
+      <stop offset="45%" stop-color="#e3d8f6" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx="50%" cy="40%" r="80%">
+      <stop offset="55%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.32"/>
+    </radialGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer>
+      <feComposite operator="over" in2="SourceGraphic"/>
+    </filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="34"/></filter>
+    <filter id="softer" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="60"/></filter>
+  </defs>
+  <rect width="800" height="1000" fill="#2a2238"/>
+  <g filter="url(#soft)">
+    <rect width="800" height="1000" fill="url(#b0)"/>
+    <rect width="800" height="1000" fill="url(#b1)"/>
+    <rect width="800" height="1000" fill="url(#b2)"/>
+    <rect width="800" height="1000" fill="url(#b3)"/>
+    <rect width="800" height="1000" fill="url(#b4)"/>
+  </g>
+  <path d="M -40 529 C 240 752, 560 498, 840 721" fill="none" stroke="#e3d8f6" stroke-opacity="0.16" stroke-width="39" stroke-linecap="round" filter="url(#softer)"/>
+  <rect width="800" height="1000" fill="url(#topLight)"/>
+  <rect width="800" height="1000" fill="url(#vignette)"/>
+  <rect width="800" height="1000" fill="#808080" filter="url(#grain)" opacity="0.5" style="mix-blend-mode:overlay"/>
+</svg>
