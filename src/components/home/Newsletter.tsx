@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { TextReveal } from "@/components/ui/Reveal";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
@@ -27,13 +26,11 @@ export function Newsletter() {
         }}
       />
       <div className="container-luxe relative flex flex-col items-center text-center">
-        <span className="eyebrow mb-6">The Inner Circle</span>
-        <TextReveal
-          as="h2"
-          text="Be first to see new works"
-          className="max-w-3xl justify-center font-display text-[clamp(2.2rem,5.5vw,5rem)] font-medium leading-[1.02]"
-        />
-        <p className="mt-6 max-w-xl font-serif text-xl leading-relaxed text-ivory/70">
+        <span className="eyebrow mb-4">The Inner Circle</span>
+        <h2 className="max-w-3xl font-display text-[clamp(2rem,5vw,4.5rem)] font-medium leading-[1.04] text-ivory">
+          Be first to see new works
+        </h2>
+        <p className="mt-5 max-w-xl font-serif text-lg leading-relaxed text-ivory/70">
           Join collectors worldwide to receive private previews, studio notes, and
           first access to new paintings before they reach the public gallery.
         </p>

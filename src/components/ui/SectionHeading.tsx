@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TextReveal } from "./Reveal";
 
 export function SectionHeading({
   eyebrow,
@@ -23,7 +22,7 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "flex flex-col gap-6",
+        "flex flex-col gap-5",
         align === "center" && "items-center text-center",
         className,
       )}
@@ -39,15 +38,14 @@ export function SectionHeading({
             <span className="h-px w-8 bg-gold" />
             {eyebrow}
           </span>
-          <TextReveal
-            as="h2"
-            text={title}
+          <h2
             className={cn(
-              "max-w-3xl font-display text-[clamp(2.2rem,5vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.02em]",
-              align === "center" && "justify-center",
+              "max-w-3xl font-display text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[1.04] tracking-[-0.02em]",
               dark ? "text-ivory" : "ink",
             )}
-          />
+          >
+            {title}
+          </h2>
         </div>
         {link && (
           <Link
@@ -63,7 +61,7 @@ export function SectionHeading({
       {description && (
         <p
           className={cn(
-            "max-w-2xl font-serif text-xl leading-relaxed",
+            "max-w-2xl font-serif text-lg leading-relaxed",
             dark ? "text-ivory/70" : "muted",
             align === "center" && "mx-auto",
           )}

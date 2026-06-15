@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -13,8 +12,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useCart } from "@/store/cart";
-import { Reveal, TextReveal } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import { Button, ButtonLink } from "@/components/ui/Button";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { cn, formatPrice } from "@/lib/utils";
 
 const easing = [0.16, 1, 0.3, 1] as const;
@@ -171,42 +171,12 @@ export default function CheckoutPage() {
       return;
     }
     setProcessing(true);
-
-    // Try a real Stripe Checkout session first.
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: contact.email,
-          name: contact.name,
-          items: items.map((i) => ({
-            id: i.id,
-            title: i.title,
-            price: i.price,
-            quantity: i.quantity,
-            image: i.image,
-          })),
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data?.url) {
-          window.location.href = data.url; // redirect to Stripe
-          return;
-        }
-      }
-    } catch {
-      // fall through to demo confirmation
-    }
-
-    // Fallback demo flow (Stripe not configured).
+    // Demo checkout — navigate to confirmation after a brief processing animation.
     const id = "NAI-" + Math.floor(1000 + Math.random() * 9000);
-    const total = grandTotal;
     setTimeout(() => {
       cart.clear();
-      router.push(`/checkout/confirmation?order=${id}&total=${total}`);
-    }, 1100);
+      router.push(`/checkout/confirmation?order=${id}&total=${grandTotal}`);
+    }, 1400);
   };
 
   // empty cart notice
@@ -243,11 +213,9 @@ export default function CheckoutPage() {
             Secure Acquisition
           </span>
         </Reveal>
-        <TextReveal
-          as="h1"
-          text="Checkout"
-          className="font-display text-[clamp(2.6rem,7vw,6rem)] font-medium leading-[0.98] tracking-[-0.02em] ink"
-        />
+        <h1 className="font-display text-[clamp(2.6rem,7vw,6rem)] font-medium leading-[0.98] tracking-[-0.02em] ink">
+          Checkout
+        </h1>
       </header>
 
       <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_400px] lg:gap-16">
@@ -580,7 +548,7 @@ export default function CheckoutPage() {
               {items.map((item) => (
                 <div key={item.id} className="flex items-center gap-4">
                   <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-sm surface">
-                    <Image
+                    <SafeImage
                       src={item.image}
                       alt={item.title}
                       fill

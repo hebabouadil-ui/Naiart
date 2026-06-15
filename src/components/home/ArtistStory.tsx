@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BRAND } from "@/lib/data";
-import { Reveal, TextReveal } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 import { SafeImage } from "@/components/ui/SafeImage";
 
@@ -55,11 +55,9 @@ export function ArtistStory() {
           <span className="eyebrow mb-5 flex items-center gap-3">
             <span className="h-px w-8 bg-gold" /> The Artist
           </span>
-          <TextReveal
-            as="h2"
-            text="Painting is how I keep what light forgets"
-            className="font-display text-[clamp(2rem,4.5vw,3.8rem)] font-medium leading-[1.04] tracking-[-0.02em] ink"
-          />
+          <h2 className="font-display text-[clamp(1.8rem,4vw,3.5rem)] font-medium leading-[1.06] tracking-[-0.02em] ink">
+            Painting is how I keep what light forgets
+          </h2>
           <Reveal delay={0.1}>
             <p className="mt-8 font-serif text-xl leading-relaxed muted">
               {BRAND.full} grew up between the salt marshes of the Camargue and
