@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { artworks, getArtwork } from "@/lib/data";
+import { artworks } from "@/lib/data";
+import { getArtworkBySlug, getAllArtworks } from "@/lib/artwork-service";
 import { ProductDetail } from "@/components/shop/ProductDetail";
 
+// Seed slugs are pre-rendered; newly-uploaded works render on demand.
 export function generateStaticParams() {
   return artworks.map((a) => ({ slug: a.slug }));
 }
@@ -13,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const artwork = getArtwork(slug);
+  const artwork = await getArtworkBySlug(slug);
   if (!artwork) return { title: "Artwork Not Found" };
 
   return {
@@ -34,10 +36,11 @@ export default async function ArtworkPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const artwork = getArtwork(slug);
+  const artwork = await getArtworkBySlug(slug);
   if (!artwork) notFound();
 
-  const related = artworks
+  const all = await getAllArtworks();
+  const related = all
     .filter((a) => a.collection === artwork.collection && a.id !== artwork.id)
     .slice(0, 4);
 

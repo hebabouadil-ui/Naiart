@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
   Archive,
@@ -11,6 +11,7 @@ import {
   Upload,
 } from "lucide-react";
 import { artworks as seed, collections } from "@/lib/data";
+import { uploadImage } from "@/lib/upload-client";
 import { formatPrice } from "@/lib/utils";
 import type { Artwork, CollectionSlug } from "@/lib/types";
 import { DataTable, PageHeader, type Column } from "@/components/admin/DataTable";
@@ -50,7 +51,19 @@ export default function ArtworksAdmin() {
   const [form, setForm] = useState(blank);
   const [files, setFiles] = useState<string[]>([]);
   const [drag, setDrag] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Load the live catalogue (Postgres-backed when configured; seed otherwise).
+  useEffect(() => {
+    fetch("/api/artworks")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.ok && Array.isArray(d.items) && d.items.length) setItems(d.items);
+      })
+      .catch(() => {});
+  }, []);
 
   const rows = useMemo(
     () =>
@@ -87,46 +100,86 @@ export default function ArtworksAdmin() {
     setOpen(true);
   }
 
-  function save() {
-    if (!form.title) return;
-    if (editing) {
-      setItems((prev) =>
-        prev.map((a) =>
-          a.id === editing.id
-            ? { ...a, ...form, images: files.length ? files : a.images }
-            : a,
-        ),
-      );
-    } else {
-      const id = `aw-${Date.now()}`;
-      setItems((prev) => [
-        {
-          ...(blank as unknown as Artwork),
-          ...form,
-          id,
-          slug: form.title.toLowerCase().replace(/\s+/g, "-"),
-          year: new Date().getFullYear(),
-          story: form.description,
-          images: files.length ? files : seed[0].images,
-          dominantColor: "#B8924A",
-          colorName: "Amber",
-          availability: "available",
-          limited: false,
-          newArrival: true,
-          popularity: 50,
-          createdAt: new Date().toISOString().slice(0, 10),
-          orientation: "portrait",
-        },
-        ...prev,
-      ]);
+  async function save() {
+    if (!form.title || saving) return;
+    setSaving(true);
+    try {
+      if (editing) {
+        const images = files.length ? files : editing.images;
+        // Persist to the database when the artwork has a server id.
+        if (!editing.id.startsWith("aw-")) {
+          const res = await fetch(`/api/artworks/${editing.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...form, images }),
+          });
+          if (res.ok) {
+            const { item } = await res.json();
+            setItems((prev) => prev.map((a) => (a.id === item.id ? item : a)));
+            setOpen(false);
+            return;
+          }
+        }
+        setItems((prev) =>
+          prev.map((a) =>
+            a.id === editing.id ? { ...a, ...form, images } : a,
+          ),
+        );
+      } else {
+        const images = files.length ? files : seed[0].images;
+        // Try to persist to the database first.
+        const res = await fetch("/api/artworks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, images, story: form.description }),
+        });
+        if (res.ok) {
+          const { item } = await res.json();
+          setItems((prev) => [item, ...prev]);
+          setOpen(false);
+          return;
+        }
+        // Fallback (no database configured): add to the local list only.
+        const id = `aw-${Date.now()}`;
+        setItems((prev) => [
+          {
+            ...(blank as unknown as Artwork),
+            ...form,
+            id,
+            slug: form.title.toLowerCase().replace(/\s+/g, "-"),
+            year: new Date().getFullYear(),
+            story: form.description,
+            images,
+            dominantColor: "#B8924A",
+            colorName: "Amber",
+            availability: "available",
+            limited: false,
+            newArrival: true,
+            popularity: 50,
+            createdAt: new Date().toISOString().slice(0, 10),
+            orientation: "portrait",
+          },
+          ...prev,
+        ]);
+      }
+      setOpen(false);
+    } finally {
+      setSaving(false);
     }
-    setOpen(false);
   }
 
-  function addFiles(list: FileList | null) {
+  async function addFiles(list: FileList | null) {
     if (!list) return;
-    const urls = Array.from(list).map((f) => URL.createObjectURL(f));
-    setFiles((prev) => [...prev, ...urls]);
+    setUploading(true);
+    try {
+      for (const f of Array.from(list)) {
+        // Upload to Cloudinary when configured; else use a local preview URL.
+        const url = (await uploadImage(f)) ?? URL.createObjectURL(f);
+        setFiles((prev) => [...prev, url]);
+      }
+    } finally {
+      setUploading(false);
+    }
   }
 
   const columns: Column<AdminArtwork>[] = [
@@ -188,13 +241,21 @@ export default function ArtworksAdmin() {
             <Pencil className="h-4 w-4" />
           </button>
           <button
-            onClick={() =>
+            onClick={() => {
+              const next = !a.archived;
               setItems((prev) =>
                 prev.map((x) =>
-                  x.id === a.id ? { ...x, archived: !x.archived } : x,
+                  x.id === a.id ? { ...x, archived: next } : x,
                 ),
-              )
-            }
+              );
+              if (!a.id.startsWith("aw-")) {
+                void fetch(`/api/artworks/${a.id}`, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ archived: next }),
+                }).catch(() => {});
+              }
+            }}
             className="rounded-lg p-2 text-graphite/70 transition-colors hover:bg-charcoal/5 hover:text-charcoal"
             aria-label="Archive"
           >
@@ -205,7 +266,14 @@ export default function ArtworksAdmin() {
             )}
           </button>
           <button
-            onClick={() => setItems((prev) => prev.filter((x) => x.id !== a.id))}
+            onClick={() => {
+              setItems((prev) => prev.filter((x) => x.id !== a.id));
+              if (!a.id.startsWith("aw-")) {
+                void fetch(`/api/artworks/${a.id}`, { method: "DELETE" }).catch(
+                  () => {},
+                );
+              }
+            }}
             className="rounded-lg p-2 text-graphite/70 transition-colors hover:bg-rose-500/10 hover:text-rose-600"
             aria-label="Delete"
           >
@@ -280,8 +348,18 @@ export default function ArtworksAdmin() {
             <Button variant="ghost" size="sm" magnetic={false} onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button variant="gold" size="sm" magnetic={false} onClick={save}>
-              {editing ? "Save Changes" : "Create Artwork"}
+            <Button
+              variant="gold"
+              size="sm"
+              magnetic={false}
+              onClick={save}
+              disabled={saving || uploading}
+            >
+              {saving
+                ? "Saving…"
+                : editing
+                  ? "Save Changes"
+                  : "Create Artwork"}
             </Button>
           </>
         }
@@ -376,10 +454,10 @@ export default function ArtworksAdmin() {
             >
               <Upload className="h-6 w-6 text-gold" />
               <p className="font-sans text-sm text-charcoal">
-                Drag & drop, or click to upload
+                {uploading ? "Uploading…" : "Drag & drop, or click to upload"}
               </p>
               <p className="font-sans text-xs text-graphite/50">
-                High-resolution JPG or PNG · Cloudinary in production
+                High-resolution JPG or PNG · stored on Cloudinary
               </p>
               <input
                 ref={fileRef}

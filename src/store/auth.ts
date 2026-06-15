@@ -29,6 +29,13 @@ export const useAuth = create<AuthState>()(
         const e = email.trim().toLowerCase();
         if (e === "admin@naiart.com" && password === "atelier") {
           set({ user: { name: "Rabia Nainia", email: e, role: "admin" } });
+          // Establish the server-side admin session cookie so protected
+          // APIs (upload, artwork CRUD) accept this browser. No-op offline.
+          void fetch("/api/admin/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: e, password }),
+          }).catch(() => {});
           return { ok: true };
         }
         if (e && password.length >= 4) {
@@ -49,7 +56,10 @@ export const useAuth = create<AuthState>()(
         });
         return { ok: true };
       },
-      logout: () => set({ user: null }),
+      logout: () => {
+        void fetch("/api/admin/login", { method: "DELETE" }).catch(() => {});
+        set({ user: null });
+      },
     }),
     { name: "naiart-auth" },
   ),

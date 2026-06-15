@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
@@ -175,6 +175,18 @@ function CheckRow({
 /* ---------------- page ---------------- */
 
 export default function ShopPage() {
+  // Live catalogue: database-backed when configured, seed otherwise.
+  const [catalogue, setCatalogue] = useState<Artwork[]>(artworks);
+  useEffect(() => {
+    fetch("/api/artworks")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.ok && Array.isArray(d.items) && d.items.length)
+          setCatalogue(d.items);
+      })
+      .catch(() => {});
+  }, []);
+
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CollectionSlug | "all">("all");
   const [price, setPrice] = useState<PriceBucket>("all");
@@ -186,15 +198,15 @@ export default function ShopPage() {
   const [mobileFilters, setMobileFilters] = useState(false);
 
   const categoryCounts = useMemo(() => {
-    const map: Record<string, number> = { all: artworks.length };
+    const map: Record<string, number> = { all: catalogue.length };
     for (const c of collections)
-      map[c.slug] = artworks.filter((a) => a.collection === c.slug).length;
+      map[c.slug] = catalogue.filter((a) => a.collection === c.slug).length;
     return map;
-  }, []);
+  }, [catalogue]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const filtered = artworks.filter((a) => {
+    const filtered = catalogue.filter((a) => {
       if (category !== "all" && a.collection !== category) return false;
       if (!priceMatches(a.price, price)) return false;
       if (orientation !== "all" && a.orientation !== orientation) return false;
@@ -226,7 +238,7 @@ export default function ShopPage() {
         break;
     }
     return sorted;
-  }, [query, category, price, orientation, availability, activeColors, sort]);
+  }, [catalogue, query, category, price, orientation, availability, activeColors, sort]);
 
   const toggleColor = (c: string) =>
     setActiveColors((prev) =>

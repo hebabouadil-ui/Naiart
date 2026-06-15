@@ -1,0 +1,64 @@
+// Naiart production data model.
+// Activated only when DATABASE_URL is set; otherwise the site falls back
+// to the bundled seed data in src/lib/data.ts so the demo always works.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Artwork {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  year          Int
+  price         Int // stored in whole currency units (USD)
+  collection    String
+  medium        String
+  dimensions    String
+  description   String
+  story         String   @default("")
+  images        String[] // Cloudinary secure URLs
+  dominantColor String   @default("#B8924A")
+  colorName     String   @default("Amber")
+  availability  String   @default("available")
+  stock         Int      @default(1)
+  featured      Boolean  @default(false)
+  limited       Boolean  @default(false)
+  newArrival    Boolean  @default(true)
+  popularity    Int      @default(50)
+  orientation   String   @default("portrait")
+  archived      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([collection])
+  @@index([featured])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  stripeSessionId String?     @unique
+  customerName    String
+  email           String
+  total           Int
+  status          String      @default("new")
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+
+  @@index([email])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+  title     String
+  price     Int
+  quantity  Int     @default(1)
+  artworkId String?
+}

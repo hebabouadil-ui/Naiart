@@ -165,12 +165,42 @@ export default function CheckoutPage() {
     setStep((s) => Math.max(1, s - 1));
   };
 
-  const pay = () => {
+  const pay = async () => {
     if (!valid) {
       setShowErrors(true);
       return;
     }
     setProcessing(true);
+
+    // Try a real Stripe Checkout session first.
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: contact.email,
+          name: contact.name,
+          items: items.map((i) => ({
+            id: i.id,
+            title: i.title,
+            price: i.price,
+            quantity: i.quantity,
+            image: i.image,
+          })),
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.url) {
+          window.location.href = data.url; // redirect to Stripe
+          return;
+        }
+      }
+    } catch {
+      // fall through to demo confirmation
+    }
+
+    // Fallback demo flow (Stripe not configured).
     const id = "NAI-" + Math.floor(1000 + Math.random() * 9000);
     const total = grandTotal;
     setTimeout(() => {
