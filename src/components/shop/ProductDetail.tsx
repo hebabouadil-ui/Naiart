@@ -24,7 +24,7 @@ import { collections } from "@/lib/data";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { ArtworkCard } from "@/components/ui/ArtworkCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Reveal, TextReveal } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 const easing = [0.16, 1, 0.3, 1] as const;
 
@@ -121,7 +121,8 @@ function MainImage({
       onMouseEnter={() => setZoom(true)}
       onMouseLeave={() => setZoom(false)}
       onMouseMove={onMove}
-      className="group relative aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-sm surface"
+      style={{ height: "clamp(360px, 68svh, 600px)" }}
+      className="group relative w-full cursor-zoom-in overflow-hidden rounded-sm surface"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -394,11 +395,14 @@ export function ProductDetail({
               )}
             </div>
 
-            <TextReveal
-              as="h1"
-              text={artwork.title}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: easing, delay: 0.1 }}
               className="mt-6 font-display text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.02] tracking-[-0.02em] ink"
-            />
+            >
+              {artwork.title}
+            </motion.h1>
 
             <Reveal delay={0.05} y={18}>
               <p className="mt-3 font-serif text-lg italic muted">

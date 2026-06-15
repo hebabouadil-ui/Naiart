@@ -55,9 +55,15 @@ export function ArtistStory() {
           <span className="eyebrow mb-5 flex items-center gap-3">
             <span className="h-px w-8 bg-gold" /> The Artist
           </span>
-          <h2 className="font-display text-[clamp(1.8rem,4vw,3.5rem)] font-medium leading-[1.06] tracking-[-0.02em] ink">
+          <motion.h2
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-[clamp(1.8rem,4vw,3.5rem)] font-medium leading-[1.06] tracking-[-0.02em] ink"
+          >
             Painting is how I keep what light forgets
-          </h2>
+          </motion.h2>
           <Reveal delay={0.1}>
             <p className="mt-8 font-serif text-xl leading-relaxed muted">
               {BRAND.full} grew up between the salt marshes of the Camargue and

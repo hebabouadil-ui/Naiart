@@ -27,9 +27,15 @@ export function Newsletter() {
       />
       <div className="container-luxe relative flex flex-col items-center text-center">
         <span className="eyebrow mb-4">The Inner Circle</span>
-        <h2 className="max-w-3xl font-display text-[clamp(2rem,5vw,4.5rem)] font-medium leading-[1.04] text-ivory">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10% 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-3xl font-display text-[clamp(2rem,5vw,4.5rem)] font-medium leading-[1.04] text-ivory"
+        >
           Be first to see new works
-        </h2>
+        </motion.h2>
         <p className="mt-5 max-w-xl font-serif text-lg leading-relaxed text-ivory/70">
           Join collectors worldwide to receive private previews, studio notes, and
           first access to new paintings before they reach the public gallery.

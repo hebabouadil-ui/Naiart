@@ -15,6 +15,7 @@ import { useCart } from "@/store/cart";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { SafeImage } from "@/components/ui/SafeImage";
+import { StripeCardStep, stripeConfigured } from "@/components/shop/StripeCardStep";
 import { cn, formatPrice } from "@/lib/utils";
 
 const easing = [0.16, 1, 0.3, 1] as const;
@@ -165,19 +166,50 @@ export default function CheckoutPage() {
     setStep((s) => Math.max(1, s - 1));
   };
 
+  // Stash a full receipt for the confirmation page, clear the cart, and go.
+  const completeOrder = (paymentRef: string) => {
+    const order = {
+      id: "NAI-" + Math.floor(1000 + Math.random() * 9000),
+      paymentRef,
+      date: new Date().toISOString(),
+      name: contact.name,
+      email: contact.email,
+      shipping,
+      items: items.map((i) => ({
+        title: i.title,
+        price: i.price,
+        quantity: i.quantity,
+        dimensions: i.dimensions,
+        image: i.image,
+      })),
+      subtotal,
+      discount: subtotal - discounted,
+      promo: promo?.code ?? null,
+      shippingFee: SHIPPING,
+      total: grandTotal,
+    };
+    try {
+      sessionStorage.setItem("naiart:last-order", JSON.stringify(order));
+    } catch {
+      /* sessionStorage unavailable — confirmation falls back to URL params */
+    }
+    cart.clear();
+    router.push(
+      `/checkout/confirmation?order=${order.id}&total=${order.total}`,
+    );
+  };
+
+  // Demo / PayPal flow (no real charge).
   const pay = async () => {
     if (!valid) {
       setShowErrors(true);
       return;
     }
     setProcessing(true);
-    // Demo checkout — navigate to confirmation after a brief processing animation.
-    const id = "NAI-" + Math.floor(1000 + Math.random() * 9000);
-    setTimeout(() => {
-      cart.clear();
-      router.push(`/checkout/confirmation?order=${id}&total=${grandTotal}`);
-    }, 1400);
+    setTimeout(() => completeOrder("demo"), 1400);
   };
+
+  const stripeCard = stripeConfigured && method === "card";
 
   // empty cart notice
   if (mounted && items.length === 0) {
@@ -391,7 +423,9 @@ export default function CheckoutPage() {
                 >
                   <h2 className="font-display text-2xl ink">Payment</h2>
                   <p className="mt-2 font-serif text-base muted">
-                    This is a demonstration checkout — no real payment is taken.
+                    {stripeConfigured
+                      ? "Enter your card below — securely processed by Stripe, no page redirect."
+                      : "This is a demonstration checkout — no real payment is taken."}
                   </p>
 
                   {/* method toggle */}
@@ -421,8 +455,22 @@ export default function CheckoutPage() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -12 }}
                         transition={{ duration: 0.4, ease: easing }}
-                        className="mt-8 grid gap-7"
                       >
+                        {stripeConfigured ? (
+                          <StripeCardStep
+                            items={items.map((i) => ({
+                              id: i.id,
+                              title: i.title,
+                              price: i.price,
+                              quantity: i.quantity,
+                            }))}
+                            email={contact.email}
+                            name={contact.name}
+                            amountLabel={formatPrice(grandTotal)}
+                            onPaid={completeOrder}
+                          />
+                        ) : (
+                        <div className="mt-8 grid gap-7">
                         <label className="block">
                           <span className="eyebrow mb-3 flex items-center justify-between text-[0.6rem]">
                             Card Number
@@ -470,6 +518,8 @@ export default function CheckoutPage() {
                           placeholder="As shown on card"
                           error={showErrors && card.name.trim().length <= 1}
                         />
+                        </div>
+                        )}
                       </motion.div>
                     ) : (
                       <motion.div
@@ -494,10 +544,12 @@ export default function CheckoutPage() {
                     )}
                   </AnimatePresence>
 
-                  <p className="mt-7 flex items-center gap-2 font-serif text-sm muted">
-                    <Lock className="h-4 w-4 shrink-0 text-gold" />
-                    Secured by Stripe — your payment is encrypted end to end.
-                  </p>
+                  {!stripeCard && (
+                    <p className="mt-7 flex items-center gap-2 font-serif text-sm muted">
+                      <Lock className="h-4 w-4 shrink-0 text-gold" />
+                      Secured by Stripe — your payment is encrypted end to end.
+                    </p>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -522,6 +574,9 @@ export default function CheckoutPage() {
                   Continue
                   <ArrowRight className="h-4 w-4" />
                 </Button>
+              ) : stripeCard ? (
+                /* Stripe's embedded form renders its own Pay button */
+                <span />
               ) : (
                 <Button
                   variant="gold"

@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export function SectionHeading({
   eyebrow,
@@ -34,18 +39,28 @@ export function SectionHeading({
         )}
       >
         <div className={cn(align === "center" && "flex flex-col items-center")}>
-          <span className="eyebrow mb-4 flex items-center gap-3">
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.6, ease }}
+            className="eyebrow mb-4 flex items-center gap-3"
+          >
             <span className="h-px w-8 bg-gold" />
             {eyebrow}
-          </span>
-          <h2
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.8, ease, delay: 0.05 }}
             className={cn(
               "max-w-3xl font-display text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[1.04] tracking-[-0.02em]",
               dark ? "text-ivory" : "ink",
             )}
           >
             {title}
-          </h2>
+          </motion.h2>
         </div>
         {link && (
           <Link
@@ -59,7 +74,11 @@ export function SectionHeading({
         )}
       </div>
       {description && (
-        <p
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10% 0px" }}
+          transition={{ duration: 0.8, ease, delay: 0.12 }}
           className={cn(
             "max-w-2xl font-serif text-lg leading-relaxed",
             dark ? "text-ivory/70" : "muted",
@@ -67,7 +86,7 @@ export function SectionHeading({
           )}
         >
           {description}
-        </p>
+        </motion.p>
       )}
     </div>
   );
