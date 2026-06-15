@@ -38,7 +38,7 @@ const sampleOrders = [
 ];
 
 const authPanel =
-  "/art/1578321272176-b7bbc0679853.svg?v=3";
+  "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=900&h=1125&q=85&fit=crop&auto=format";
 
 function AuthScreen() {
   const { login, register } = useAuth();

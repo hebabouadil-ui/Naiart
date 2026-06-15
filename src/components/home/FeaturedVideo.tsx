@@ -7,7 +7,7 @@ import { Play, X } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 
 const poster =
-  "/art/1579783902614-a3fb3927b6a5.svg?v=3";
+  "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1600&h=900&q=85&fit=crop&auto=format";
 
 export function FeaturedVideo() {
   const [open, setOpen] = useState(false);

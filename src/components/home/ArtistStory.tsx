@@ -8,7 +8,7 @@ import { Reveal, TextReveal } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 
 const portrait =
-  "/art/1544717305-2782549b5136.svg?v=3";
+  "https://images.unsplash.com/photo-1544717305-2782549b5136?w=900&h=1125&q=85&fit=crop&auto=format";
 
 export function ArtistStory() {
   const ref = useRef<HTMLDivElement>(null);

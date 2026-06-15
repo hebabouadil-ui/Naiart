@@ -13,12 +13,12 @@ export const metadata: Metadata = {
 };
 
 const portrait =
-  "/art/1544717305-2782549b5136.svg?v=3";
+  "https://images.unsplash.com/photo-1544717305-2782549b5136?w=900&h=1125&q=85&fit=crop&auto=format";
 
 const studioPhotos = [
-  "/art/1513519245088-0e12902e35ca.svg?v=3",
-  "/art/1452860606245-08befc0ff44b.svg?v=3",
-  "/art/1505847119291-32d6f0a1f0a8.svg?v=3",
+  "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&h=1040&q=85&fit=crop&auto=format",
+  "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&h=1040&q=85&fit=crop&auto=format",
+  "https://images.unsplash.com/photo-1505847119291-32d6f0a1f0a8?w=800&h=1040&q=85&fit=crop&auto=format",
 ];
 
 export default function AboutPage() {
@@ -28,7 +28,7 @@ export default function AboutPage() {
       <section className="relative flex min-h-[88vh] items-end overflow-hidden bg-deep-charcoal">
         <div className="grain absolute inset-0" />
         <Image
-          src="/art/1499781350541-7783f6c6a0c8.svg?v=3"
+          src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=1600&h=900&q=85&fit=crop&auto=format"
           alt="The atelier in Arles"
           fill
           priority
