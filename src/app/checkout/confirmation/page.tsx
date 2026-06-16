@@ -3,10 +3,12 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Check, Download, ShieldCheck, Truck } from "lucide-react";
+import { Check, Download, Loader2, ShieldCheck, Truck } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { BRAND } from "@/lib/data";
 import { formatPrice } from "@/lib/utils";
+import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 
 const easing = [0.16, 1, 0.3, 1] as const;
 
@@ -15,6 +17,7 @@ type OrderLine = {
   price: number;
   quantity: number;
   dimensions?: string;
+  image?: string;
 };
 
 type StoredOrder = {
@@ -46,6 +49,17 @@ function ConfirmationInner() {
     Number.isFinite(totalRaw) && totalRaw > 0 ? totalRaw : null;
 
   const [order, setOrder] = useState<StoredOrder | null>(null);
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    if (!order || downloading) return;
+    setDownloading(true);
+    try {
+      await downloadReceiptPdf(order);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   useEffect(() => {
     try {
@@ -164,18 +178,30 @@ function ConfirmationInner() {
             {order.items.map((it, i) => (
               <div
                 key={i}
-                className="flex items-baseline justify-between gap-4 py-2.5 font-serif text-sm"
+                className="flex items-center gap-4 py-3"
               >
-                <span className="ink">
-                  {it.title}
-                  {it.dimensions && (
-                    <span className="muted"> · {it.dimensions}</span>
-                  )}
-                  {it.quantity > 1 && (
-                    <span className="muted"> × {it.quantity}</span>
-                  )}
-                </span>
-                <span className="shrink-0 ink">
+                <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-sm surface">
+                  <SafeImage
+                    src={it.image ?? ""}
+                    alt={it.title}
+                    fill
+                    sizes="56px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-display text-base leading-tight ink">
+                    {it.title}
+                  </p>
+                  <p className="mt-0.5 font-serif text-xs italic muted">
+                    {it.dimensions}
+                    {it.quantity > 1 ? `  ·  Quantity ${it.quantity}` : ""}
+                  </p>
+                  <p className="mt-0.5 text-[0.62rem] uppercase tracking-luxe-sm text-gold">
+                    Certificate of authenticity included
+                  </p>
+                </div>
+                <span className="shrink-0 font-serif text-sm ink">
                   {formatPrice(it.price * it.quantity)}
                 </span>
               </div>
@@ -231,12 +257,17 @@ function ConfirmationInner() {
       {/* actions (not printed) */}
       <div className="no-print mt-8 flex flex-col items-center gap-4">
         <button
-          onClick={() => window.print()}
+          onClick={handleDownload}
+          disabled={downloading || !order}
           data-cursor="hover"
-          className="group inline-flex items-center gap-3 rounded-full bg-charcoal px-7 py-4 text-[0.62rem] uppercase tracking-luxe-sm text-ivory transition-colors duration-500 hover:bg-gold hover:text-charcoal dark:bg-ivory dark:text-charcoal dark:hover:bg-gold"
+          className="group inline-flex items-center gap-3 rounded-full bg-charcoal px-7 py-4 text-[0.62rem] uppercase tracking-luxe-sm text-ivory transition-colors duration-500 hover:bg-gold hover:text-charcoal disabled:opacity-60 dark:bg-ivory dark:text-charcoal dark:hover:bg-gold"
         >
-          <Download className="h-4 w-4" />
-          Download Receipt (PDF)
+          {downloading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
+          {downloading ? "Preparing PDF…" : "Download Receipt (PDF)"}
         </button>
 
         <div className="mt-6 grid w-full max-w-2xl gap-8 border-t border-current/10 pt-10 text-left sm:grid-cols-3">

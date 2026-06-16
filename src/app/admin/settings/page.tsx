@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Upload } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, Link as LinkIcon, RotateCcw, Upload } from "lucide-react";
 import { BRAND } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/admin/DataTable";
 import { Button } from "@/components/ui/Button";
 import { FieldGroup, Input, Textarea } from "@/components/admin/Field";
+import { uploadImage } from "@/lib/upload-client";
+import {
+  useSiteContent,
+  DEFAULT_PROFILE,
+  type ArtistProfile,
+} from "@/store/site-content";
 
 const TABS = [
   "Content",
@@ -20,7 +26,40 @@ export default function SettingsAdmin() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Content");
   const [saved, setSaved] = useState(false);
 
+  // ── Artist profile (About tab) — wired to the persisted content store ──
+  const storeProfile = useSiteContent((s) => s.profile);
+  const setProfile = useSiteContent((s) => s.setProfile);
+  const resetProfile = useSiteContent((s) => s.reset);
+  const hydrated = useSiteContent((s) => s.hydrated);
+
+  const [about, setAbout] = useState<ArtistProfile>(DEFAULT_PROFILE);
+  const [uploadingPortrait, setUploadingPortrait] = useState(false);
+  const portraitRef = useRef<HTMLInputElement>(null);
+
+  // Mirror the store into the editable form once it has hydrated.
+  useEffect(() => {
+    if (hydrated) setAbout(storeProfile);
+  }, [hydrated, storeProfile]);
+
+  async function onPortraitFile(file: File | null | undefined) {
+    if (!file) return;
+    setUploadingPortrait(true);
+    try {
+      const url = (await uploadImage(file)) ?? URL.createObjectURL(file);
+      setAbout((a) => ({ ...a, portrait: url }));
+    } finally {
+      setUploadingPortrait(false);
+    }
+  }
+
   function save() {
+    if (tab === "About") {
+      // Persist the artist profile so the About page updates immediately.
+      setProfile({
+        ...about,
+        bio: about.bio.map((b) => b.trim()).filter(Boolean),
+      });
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2200);
   }
@@ -77,26 +116,116 @@ export default function SettingsAdmin() {
 
         {tab === "About" && (
           <div className="space-y-5">
-            <FieldGroup label="Artist Biography">
-              <Textarea
-                className="min-h-[160px]"
-                defaultValue="Rabia Nainia grew up between the salt marshes of the Camargue and the print studios of Marseille. From her atelier in Arles, she works in oil and cold wax, building and breaking surfaces until a painting holds light the way memory holds a moment."
+            <p className="rounded-xl bg-gold/8 px-4 py-3 font-sans text-xs text-graphite/70">
+              These fields control the public{" "}
+              <span className="font-medium text-charcoal">About / The Artist</span>{" "}
+              page. Changes apply the moment you press Save.
+            </p>
+
+            <FieldGroup label="Artist Name">
+              <Input
+                value={about.name}
+                onChange={(e) => setAbout({ ...about, name: e.target.value })}
+                placeholder="Rabia Nainia"
               />
             </FieldGroup>
+
+            <FieldGroup label="Hero Title (use a new line for the break)">
+              <Textarea
+                className="min-h-[70px]"
+                value={about.heroTitle}
+                onChange={(e) =>
+                  setAbout({ ...about, heroTitle: e.target.value })
+                }
+                placeholder={"The hand\nbehind the light"}
+              />
+            </FieldGroup>
+
+            <FieldGroup label="Hero Subtitle">
+              <Textarea
+                value={about.heroSubtitle}
+                onChange={(e) =>
+                  setAbout({ ...about, heroSubtitle: e.target.value })
+                }
+              />
+            </FieldGroup>
+
+            <FieldGroup label="Artist Biography (one paragraph per line)">
+              <Textarea
+                className="min-h-[200px]"
+                value={about.bio.join("\n\n")}
+                onChange={(e) =>
+                  setAbout({
+                    ...about,
+                    bio: e.target.value.split(/\n{2,}/),
+                  })
+                }
+              />
+            </FieldGroup>
+
             <div>
               <p className="mb-2 font-grotesk text-[0.66rem] font-medium uppercase tracking-luxe-sm text-graphite/80">
                 Artist Photo
               </p>
-              <div className="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-charcoal/15 px-6 py-8 text-center hover:border-gold/60">
-                <Upload className="h-6 w-6 text-gold" />
-                <p className="font-sans text-sm text-charcoal">
-                  Upload portrait
-                </p>
-                <p className="font-sans text-xs text-graphite/50">
-                  Stored via Cloudinary in production
-                </p>
+              <div className="flex items-start gap-4">
+                {/* live preview */}
+                <div className="h-28 w-24 shrink-0 overflow-hidden rounded-xl border border-charcoal/10 bg-soft-beige">
+                  {about.portrait ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={about.portrait}
+                      alt="Artist portrait"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : null}
+                </div>
+
+                <div className="flex-1 space-y-2">
+                  {/* paste a URL — always reliable */}
+                  <div className="flex items-center gap-2 rounded-lg border border-charcoal/10 bg-warm-white px-3 focus-within:border-gold">
+                    <LinkIcon className="h-4 w-4 shrink-0 text-gold" />
+                    <input
+                      value={about.portrait}
+                      onChange={(e) =>
+                        setAbout({ ...about, portrait: e.target.value })
+                      }
+                      placeholder="Paste an image URL (https://…)"
+                      className="w-full bg-transparent py-2.5 font-sans text-sm outline-none"
+                    />
+                  </div>
+
+                  {/* or upload (Cloudinary when configured) */}
+                  <div
+                    onClick={() => portraitRef.current?.click()}
+                    className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-charcoal/15 px-4 py-3 text-center hover:border-gold/60"
+                  >
+                    <Upload className="h-4 w-4 text-gold" />
+                    <span className="font-sans text-xs text-charcoal">
+                      {uploadingPortrait
+                        ? "Uploading…"
+                        : "Or upload a portrait file"}
+                    </span>
+                    <input
+                      ref={portraitRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => onPortraitFile(e.target.files?.[0])}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
+
+            <button
+              onClick={() => {
+                resetProfile();
+                setAbout(DEFAULT_PROFILE);
+              }}
+              className="inline-flex items-center gap-2 font-grotesk text-[0.66rem] uppercase tracking-luxe-sm text-graphite/60 transition-colors hover:text-gold"
+            >
+              <RotateCcw className="h-3.5 w-3.5" /> Reset to default
+            </button>
           </div>
         )}
 

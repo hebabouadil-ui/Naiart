@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import {
   Archive,
   ArchiveRestore,
+  Link as LinkIcon,
   Pencil,
   Plus,
   Trash2,
   Upload,
 } from "lucide-react";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { artworks as seed, collections } from "@/lib/data";
 import { uploadImage } from "@/lib/upload-client";
 import { formatPrice } from "@/lib/utils";
@@ -53,7 +54,15 @@ export default function ArtworksAdmin() {
   const [drag, setDrag] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [urlInput, setUrlInput] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  function addUrl() {
+    const url = urlInput.trim();
+    if (!url) return;
+    setFiles((prev) => [...prev, url]);
+    setUrlInput("");
+  }
 
   // Load the live catalogue (Postgres-backed when configured; seed otherwise).
   useEffect(() => {
@@ -81,6 +90,7 @@ export default function ArtworksAdmin() {
     setEditing(null);
     setForm(blank);
     setFiles([]);
+    setUrlInput("");
     setOpen(true);
   }
 
@@ -97,6 +107,7 @@ export default function ArtworksAdmin() {
       featured: a.featured,
     });
     setFiles(a.images);
+    setUrlInput("");
     setOpen(true);
   }
 
@@ -189,7 +200,14 @@ export default function ArtworksAdmin() {
       render: (a) => (
         <div className="flex items-center gap-3">
           <div className="relative h-12 w-10 shrink-0 overflow-hidden rounded-md">
-            <Image src={a.images[0]} alt={a.title} fill sizes="40px" className="object-cover" />
+            <SafeImage
+              src={a.images[0]}
+              alt={a.title}
+              fill
+              sizes="40px"
+              className="object-cover"
+              fallbackColor={a.dominantColor}
+            />
           </div>
           <div>
             <p className="font-medium text-charcoal">{a.title}</p>
@@ -429,11 +447,86 @@ export default function ArtworksAdmin() {
             />
           </div>
 
-          {/* drag & drop */}
+          {/* Images */}
           <div className="sm:col-span-2">
             <p className="mb-2 block font-grotesk text-[0.66rem] font-medium uppercase tracking-luxe-sm text-graphite/80">
-              Images
+              Artwork Images
             </p>
+
+            {/* current images — first is the cover shown on the storefront */}
+            {files.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-3">
+                {files.map((f, i) => (
+                  <div
+                    key={i}
+                    className="group relative h-24 w-20 overflow-hidden rounded-lg border border-charcoal/10 bg-soft-beige"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={f} alt="" className="h-full w-full object-cover" />
+                    {i === 0 && (
+                      <span className="absolute inset-x-0 bottom-0 bg-charcoal/80 py-0.5 text-center text-[0.55rem] uppercase tracking-luxe-sm text-gold">
+                        Cover
+                      </span>
+                    )}
+                    <div className="absolute right-1 top-1 flex gap-1">
+                      {i !== 0 && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFiles((prev) => {
+                              const next = [...prev];
+                              const [moved] = next.splice(i, 1);
+                              next.unshift(moved);
+                              return next;
+                            });
+                          }}
+                          title="Make cover"
+                          className="rounded-full bg-gold/90 px-1 py-0.5 text-[0.5rem] font-medium uppercase text-charcoal opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                          Set
+                        </button>
+                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFiles((prev) => prev.filter((_, idx) => idx !== i));
+                        }}
+                        className="rounded-full bg-charcoal/70 p-0.5 text-ivory"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* paste an image URL — always works, even without Cloudinary */}
+            <div className="mb-3 flex gap-2">
+              <input
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addUrl();
+                  }
+                }}
+                placeholder="Paste an image URL (https://…) and press Add"
+                className="w-full rounded-lg border border-charcoal/10 bg-warm-white px-3 py-2.5 font-sans text-sm outline-none focus:border-gold"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                magnetic={false}
+                onClick={addUrl}
+                disabled={!urlInput.trim()}
+              >
+                <LinkIcon className="h-4 w-4" /> Add
+              </Button>
+            </div>
+
+            {/* drag & drop upload (Cloudinary when configured) */}
             <div
               onDragOver={(e) => {
                 e.preventDefault();
@@ -446,7 +539,7 @@ export default function ArtworksAdmin() {
                 addFiles(e.dataTransfer.files);
               }}
               onClick={() => fileRef.current?.click()}
-              className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-6 py-8 text-center transition-colors ${
+              className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-6 py-7 text-center transition-colors ${
                 drag
                   ? "border-gold bg-gold/5"
                   : "border-charcoal/15 hover:border-gold/60"
@@ -454,10 +547,10 @@ export default function ArtworksAdmin() {
             >
               <Upload className="h-6 w-6 text-gold" />
               <p className="font-sans text-sm text-charcoal">
-                {uploading ? "Uploading…" : "Drag & drop, or click to upload"}
+                {uploading ? "Uploading…" : "Drag & drop, or click to upload a file"}
               </p>
               <p className="font-sans text-xs text-graphite/50">
-                High-resolution JPG or PNG · stored on Cloudinary
+                High-resolution JPG or PNG · stored on Cloudinary when configured
               </p>
               <input
                 ref={fileRef}
@@ -468,28 +561,10 @@ export default function ArtworksAdmin() {
                 onChange={(e) => addFiles(e.target.files)}
               />
             </div>
-            {files.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-3">
-                {files.map((f, i) => (
-                  <div
-                    key={i}
-                    className="relative h-20 w-16 overflow-hidden rounded-lg border border-charcoal/10"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={f} alt="" className="h-full w-full object-cover" />
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setFiles((prev) => prev.filter((_, idx) => idx !== i));
-                      }}
-                      className="absolute right-1 top-1 rounded-full bg-charcoal/70 p-0.5 text-ivory"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+            <p className="mt-2 font-sans text-xs text-graphite/45">
+              The first image is the cover shown across the storefront. Tip:
+              pasting a URL is the most reliable way to set a permanent image.
+            </p>
           </div>
         </div>
       </Modal>
