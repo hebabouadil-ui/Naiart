@@ -68,7 +68,10 @@ export function Modal({
                 <X className="h-5 w-5" />
               </button>
             </header>
-            <div className="no-scrollbar flex-1 overflow-y-auto px-7 py-6">
+            <div
+              data-lenis-prevent
+              className="no-scrollbar flex-1 overflow-y-auto px-7 py-6"
+            >
               {children}
             </div>
             {footer && (
@@ -129,7 +132,10 @@ export function Drawer({
                 <X className="h-5 w-5" />
               </button>
             </header>
-            <div className="no-scrollbar flex-1 overflow-y-auto px-7 py-6">
+            <div
+              data-lenis-prevent
+              className="no-scrollbar flex-1 overflow-y-auto px-7 py-6"
+            >
               {children}
             </div>
           </motion.div>

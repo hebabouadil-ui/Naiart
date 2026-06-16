@@ -12,8 +12,18 @@ export function getLenis() {
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
 
   useEffect(() => {
+    // Admin pages use their own fixed/sticky layout with data tables and
+    // modals — Lenis intercepts wheel events and prevents those from
+    // scrolling their overflow-y-auto containers, so skip it there.
+    if (isAdmin) {
+      lenisInstance?.destroy();
+      lenisInstance = null;
+      return;
+    }
+
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -40,13 +50,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       lenis.destroy();
       lenisInstance = null;
     };
-  }, []);
+  }, [isAdmin]);
 
-  // Reset scroll position on route change
+  // Reset scroll position on route change (storefront only)
   useEffect(() => {
-    lenisInstance?.scrollTo(0, { immediate: true });
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!isAdmin) {
+      lenisInstance?.scrollTo(0, { immediate: true });
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, isAdmin]);
 
   return <>{children}</>;
 }
